@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Effects POC</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="./effects.js"></script>
+</head>
+<body class="font-sans bg-gray-100">
+
+  <div class="container">
+    <canvas id="mainCanvas" ></canvas>
+
+    <label for="effectSelect" class="mr-2">Select Effect:</label>
+    <select id="effectSelect" class="border rounded px-2 py-1">
+      <option value="Grayscale">Grayscale</option>
+      <option value="Emboss">Emboss</option>
+      <option value="Invert">Invert</option>
+      <option value="Soften">Soften</option>
+      <option value="Dilate">Dilate</option>
+      <option value="Erode">Erode</option>
+      <option value="Sobel">Sobel</option>
+      <option value="EdgeDetection">EdgeDetection</option>
+      <option value="Blur">Blur</option>
+      <option value="Sharpen">Sharpen</option>
+    </select>
+
+    <button id="applyEffectBtn" class="ml-2 bg-blue-500 text-white px-4 py-2 rounded">Apply Effect</button>
+  </div>
+
+  <script>
+    const mainCanvas = document.getElementById("mainCanvas");
+    mainCanvas.width = window.innerWidth;
+    mainCanvas.height = window.innerHeight-200;
+    const mainCtx = mainCanvas.getContext("2d");
+    const imageUrl = "bg.jpg"; // Replace with your image URL
+    const effectSelect = document.getElementById("effectSelect");
+    const applyEffectBtn = document.getElementById("applyEffectBtn");
+
+    // Load the image from the provided URL
+    const img = new Image();
+    img.onload = function () {
+      mainCtx.drawImage(img, 0, 0, mainCanvas.width, mainCanvas.height);
+    };
+    img.src = imageUrl;
+
+    applyEffectBtn.addEventListener("click", applySelectedEffect);
+
+    function applySelectedEffect() {
+      const selectedEffect = effectSelect.value;
+      const imageData = mainCtx.getImageData(0, 0, mainCanvas.width, mainCanvas.height);
+
+      applyEffect(imageData, selectedEffect, function (newImageData) {
+        mainCtx.putImageData(newImageData, 0, 0);
+      });
+    }
+  </script>
+</body>
+</html>
